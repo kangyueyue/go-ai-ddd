@@ -1,0 +1,11 @@
+.idea/
+.vscode/
+
+# 日志文件
+/log/
+
+# 配置文件
+conf/config.toml
+
+# .env
+.env
