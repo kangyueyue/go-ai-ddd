@@ -6,6 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	config "github.com/kangyueyue/go-ai-ddd/conf"
+	"github.com/kangyueyue/go-ai-ddd/infrastructure/persistence/message"
+	"github.com/kangyueyue/go-ai-ddd/infrastructure/persistence/session"
 	"github.com/kangyueyue/go-ai-ddd/infrastructure/persistence/user"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -64,5 +66,7 @@ func InitMysql() error {
 func migration() error {
 	return DB.AutoMigrate(
 		new(user.UserPojo),
+		new(message.MessagePojo),
+		new(session.SessionPojo),
 	)
 }

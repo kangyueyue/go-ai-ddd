@@ -2,7 +2,9 @@ package adapter
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/kangyueyue/go-ai-ddd/interfaces/adapter/AI"
 	"github.com/kangyueyue/go-ai-ddd/interfaces/adapter/user"
+	"github.com/kangyueyue/go-ai-ddd/interfaces/middleware/jwt"
 )
 
 // NewRouter 初始化路由
@@ -16,7 +18,11 @@ func NewRouter() *gin.Engine {
 		})
 		// 用户相关接口
 		user.UserRouter(group.Group("/user"))
-		// TODO: session对话接口，需要加鉴权
+
+		// session对话接口，需要加鉴权
+		aiGroup := group.Group("/AI")
+		aiGroup.Use(jwt.Auth())
+		AI.AIRouter(aiGroup)
 	}
 	return r
 }

@@ -1,0 +1,79 @@
+package aihelper
+
+import (
+	"context"
+	"fmt"
+	"sync"
+)
+
+const (
+	OpenAI string = "1"
+	Ollama string = "2"
+)
+
+// ModelCreator 模型创造器
+type ModelCreator func(ctx context.Context, config map[string]interface{}) (AIModel, error)
+
+// AIModelFactory 模型工厂
+type AIModelFactory struct {
+	ModelCreatorMap map[string]ModelCreator
+}
+
+var (
+	globalFactory *AIModelFactory
+	factoryOnce   sync.Once
+)
+
+// GetGlobalFactory 创建模型工厂
+func GetGlobalFactory() *AIModelFactory {
+	factoryOnce.Do(func() {
+		if globalFactory == nil {
+			globalFactory = &AIModelFactory{
+				ModelCreatorMap: make(map[string]ModelCreator),
+			}
+		}
+		globalFactory.registerCreators() // 注册
+	})
+	return globalFactory
+}
+
+// registerCreators 单个模型注册（初始化）
+func (f *AIModelFactory) registerCreators() {
+	f.ModelCreatorMap[OpenAI] = func(ctx context.Context, config map[string]interface{}) (AIModel, error) {
+		return NewOpenAIModel(ctx)
+	}
+
+	// 本地部署ollama
+	f.ModelCreatorMap[Ollama] = func(ctx context.Context, config map[string]interface{}) (AIModel, error) {
+		return NewOllamaModel(ctx,
+			"http://localhost:11434",
+			"llama3:latest")
+	}
+}
+
+// CreateAIModel 创建模型
+func (f *AIModelFactory) CreateAIModel(ctx context.Context,
+	modelType string, config map[string]interface{},
+) (AIModel, error) {
+	creator, ok := f.ModelCreatorMap[modelType]
+	if !ok {
+		return nil, fmt.Errorf("unsupport model type:%s", modelType)
+	}
+	return creator(ctx, config)
+}
+
+// CreateAIHelper 创建ai helper
+func (f *AIModelFactory) CreateAIHelper(ctx context.Context,
+	modelType string, sessionId string, config map[string]interface{},
+) (*AIHelper, error) {
+	model, err := f.CreateAIModel(ctx, modelType, config)
+	if err != nil {
+		return nil, err
+	}
+	return NewAIHelper(model, sessionId), nil
+}
+
+// RegisterModel 注册模型
+func (f *AIModelFactory) RegisterModel(modelType string, creator ModelCreator) {
+	f.ModelCreatorMap[modelType] = creator
+}

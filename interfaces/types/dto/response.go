@@ -4,8 +4,8 @@ import "github.com/kangyueyue/go-ai-ddd/interfaces/types/code"
 
 // Response resp
 type Response struct {
-	StatusCode code.Code   `json:"status_code"`
-	StatusMsg  string `json:"status_msg"`
+	StatusCode code.Code `json:"status_code"`
+	StatusMsg  string    `json:"status_msg"`
 }
 
 // CodeOf code

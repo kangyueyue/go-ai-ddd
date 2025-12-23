@@ -39,7 +39,7 @@ var (
 )
 
 // GetUserServiceImpl 获取用户服务实例
-func GetUserServiceImpl(u user.IUserDomain) *UserService {
+func GetUserServiceImpl(u user.IUserDomain) IUserService {
 	if GlobalUserServiceImpl != nil {
 		return GlobalUserServiceImpl
 	}
