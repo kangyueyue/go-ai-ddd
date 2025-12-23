@@ -11,7 +11,7 @@ import (
 	"github.com/kangyueyue/go-ai-ddd/infrastructure/container"
 	mysql "github.com/kangyueyue/go-ai-ddd/infrastructure/persistence/db"
 	"github.com/kangyueyue/go-ai-ddd/infrastructure/redis"
-	"github.com/kangyueyue/go-ai-ddd/interfaces/adapter/initialize"
+	"github.com/kangyueyue/go-ai-ddd/interfaces/adapter"
 )
 
 // main is the entry point for the application
@@ -67,7 +67,7 @@ func main() {
 
 // StartServer 启动服务
 func StartServer(addr string, port int) error {
-	r := initialize.NewRouter()
+	r := adapter.NewRouter()
 	logger.Log.Infof("server start in port:%d", port)
 	return r.Run(fmt.Sprintf("%s:%d", addr, port))
 }

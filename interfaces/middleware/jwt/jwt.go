@@ -6,13 +6,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	myjwt "github.com/kangyueyue/go-ai-ddd/infrastructure/utils/jwt"
-	"github.com/kangyueyue/go-ai-ddd/interfaces/types"
+	"github.com/kangyueyue/go-ai-ddd/interfaces/types/code"
+	"github.com/kangyueyue/go-ai-ddd/interfaces/types/dto"
 )
 
 // Auth 认证中间件
 func Auth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		res := new(types.Response)
+		res := new(dto.Response)
 		authHeader := ctx.GetHeader("Authorization")
 		var token string
 		// bearer 持票人模式
@@ -23,13 +24,13 @@ func Auth() gin.HandlerFunc {
 			token = ctx.Query("token")
 		}
 		if token == "" {
-			ctx.JSON(http.StatusOK, res.CodeOf(types.CodeInvalidToken))
+			ctx.JSON(http.StatusOK, res.CodeOf(code.CodeInvalidToken))
 			ctx.Abort() // 中断当前请求
 			return
 		}
 		username, ok := myjwt.ParseToken(token)
 		if !ok {
-			ctx.JSON(http.StatusOK, res.CodeOf(types.CodeInvalidToken))
+			ctx.JSON(http.StatusOK, res.CodeOf(code.CodeInvalidToken))
 			ctx.Abort()
 			return
 		}

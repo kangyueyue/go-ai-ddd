@@ -1,13 +1,15 @@
-package types
+package dto
+
+import "github.com/kangyueyue/go-ai-ddd/interfaces/types/code"
 
 // Response resp
 type Response struct {
-	StatusCode Code   `json:"status_code"`
+	StatusCode code.Code   `json:"status_code"`
 	StatusMsg  string `json:"status_msg"`
 }
 
 // CodeOf code
-func (r *Response) CodeOf(code Code) Response {
+func (r *Response) CodeOf(code code.Code) Response {
 	if nil == r {
 		r = new(Response)
 	}
@@ -18,5 +20,5 @@ func (r *Response) CodeOf(code Code) Response {
 
 // Success 成功
 func (r *Response) Success() {
-	r.CodeOf(CodeSuccess)
+	r.CodeOf(code.CodeSuccess)
 }
