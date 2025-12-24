@@ -12,7 +12,7 @@ import (
 	"github.com/kangyueyue/go-ai-ddd/interfaces/types/code"
 )
 
-var ctx context.Context
+var ctx = context.Background()
 
 // SessionDomainImpl 会话领域实现
 type SessionDomainImpl struct {

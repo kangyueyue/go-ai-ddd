@@ -5,20 +5,26 @@ import (
 	"gorm.io/gorm"
 )
 
-// UserRepositoryImpl 实现 Repository 接口
-type UserRepositoryImpl struct {
+// SessionRepositoryImpl 实现 Repository 接口
+type SessionRepositoryImpl struct {
 	db *gorm.DB
 }
 
+
+// NewSessionRepositoryImpl 创建用户仓库
+func NewSessionRepositoryImpl(db *gorm.DB) *SessionRepositoryImpl {
+	return &SessionRepositoryImpl{db: db}
+}
+
 // CreateSession 创建会话
-func (r *UserRepositoryImpl) CreateSession(session *entity.SessionEntity) (*entity.SessionEntity, error) {
+func (r *SessionRepositoryImpl) CreateSession(session *entity.SessionEntity) (*entity.SessionEntity, error) {
 	pojo := Entity2Pojo(session)
 	err := r.db.Create(pojo).Error
 	return Pojo2Entity(pojo), err
 }
 
 // GetSessionInfosBySessionIDs 获取会话信息
-func (r *UserRepositoryImpl) GetSessionInfosBySessionIDs(sessionIDs []string) ([]entity.SessionInfoEntity, error) {
+func (r *SessionRepositoryImpl) GetSessionInfosBySessionIDs(sessionIDs []string) ([]entity.SessionInfoEntity, error) {
 	sessions := make([]SessionPojo, 0, len(sessionIDs))
 	err := r.db.Model(&SessionPojo{}).Where("id IN (?)", sessionIDs).Find(&sessions).Error
 	if err != nil {

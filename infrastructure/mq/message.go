@@ -5,6 +5,8 @@ import (
 
 	"github.com/kangyueyue/go-ai-ddd/domain/session/entity"
 	logger "github.com/kangyueyue/go-ai-ddd/infrastructure/common/log"
+	mysql "github.com/kangyueyue/go-ai-ddd/infrastructure/persistence/db"
+	"github.com/kangyueyue/go-ai-ddd/infrastructure/persistence/message"
 	"github.com/streadway/amqp"
 )
 
@@ -41,7 +43,9 @@ func MqMessage(msg *amqp.Delivery) error {
 		UserName:  param.UserName,
 		IsUser:    param.IsUser,
 	}
-	// TODO:_, err = message.CreateMessage(newMsg)
+	// 创建repo
+	repo := message.NewMessageRepository(mysql.DB)	
+	_, err = repo.CreateMessage(newMsg)
 	if err == nil {
 		logger.Log.Infof("use mq to save message success:%v", newMsg.Content)
 	}

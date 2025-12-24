@@ -30,8 +30,8 @@ var (
 	SessionServiceImplOnce   sync.Once
 )
 
-// GetGlobalSessionServiceImpl 获取全局的会话服务实例
-func GetGlobalSessionServiceImpl(u session.IServiceDomain) ISessionService {
+// GetSessionServiceImpl 获取全局的会话服务实例
+func GetSessionServiceImpl(u session.IServiceDomain) ISessionService {
 	if GlobalSessionServiceImpl != nil {
 		return GlobalSessionServiceImpl
 	}
